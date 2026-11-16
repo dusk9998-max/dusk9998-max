@@ -21,3 +21,12 @@ Background: remove the entire dragon and reconstruct the warm rice-paper
 surface. Preserve the muted red sun at upper left and gray-brown cloud curls
 with gold outlines at lower left and upper right. Remove the dark frame. No
 creature, text or new symbols.
+
+## Growth forms
+
+Hatchling, young, mature and elder PNGs were generated from dragon.png with the
+built-in image generation tool and resized to a maximum 1024 pixels. Each keeps
+the vermilion/ivory paper, floral motifs, gold seams and transparent background.
+The hatchling has rounded features and horn buds; young has a slender body;
+mature adds branched horns and mane; elder adds elaborate antlers and streamers.
+These fixed assets are embedded locally; no image service runs in Actions.

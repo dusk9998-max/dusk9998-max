@@ -1,7 +1,7 @@
 """Owner-authenticated aggregate activity -> an original folded-paper dragon."""
 import argparse
 import json
-import base64
+from dragon_art import embedded_art
 import os
 from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
@@ -68,14 +68,14 @@ def calendar_days(payload: dict, login: str, first: date, last: date) -> dict:
     return days
 
 
-def collect(login: str, token: str, today: date) -> dict:
+def collect(login: str, token: str, today: date, include_today: bool = False) -> dict:
     viewer = api("query { viewer { login createdAt } }", {}, token)["data"]["viewer"]
     require_owner(viewer, login)
     # Calendar attribution can precede the UTC creation date. Query the entire
     # creation year rather than clipping legitimate early contribution days.
     first = date(int(viewer["createdAt"][:4]), 1, 1)
     days = {}
-    for start, end in windows(first, today - timedelta(days=1)):
+    for start, end in windows(first, today if include_today else today - timedelta(days=1)):
         payload = api(QUERY, {"from": start.isoformat() + "T00:00:00Z",
                               "to": end.isoformat() + "T23:59:59Z"}, token)
         days.update(calendar_days(payload, login, start, end))
@@ -93,18 +93,6 @@ def derive_state(days: dict, previous: dict, today: date) -> dict:
     gold = sum(total >= threshold for threshold in (25, 100, 300, 750, 2000))
     return {"version": 1, "stage": max(stage, previous.get("stage", 0)),
             "gold": max(gold, previous.get("gold", 0))}
-
-
-def embedded_art(name: str) -> str:
-    asset = Path(__file__).resolve().parents[1] / "assets" / "paper-dragon" / name
-    content = asset.read_bytes()
-    if content.startswith(b"\x89PNG\r\n\x1a\n"):
-        mime = "image/png"
-    elif content.startswith(b"\xff\xd8\xff"):
-        mime = "image/jpeg"
-    else:
-        raise ValueError("Invalid dragon artwork asset.")
-    return "data:" + mime + ";base64," + base64.b64encode(content).decode("ascii")
 
 
 def render(state: dict, recent: int, animated: bool = True) -> str:
@@ -167,13 +155,34 @@ def main():
     parser.add_argument("--login", required=True)
     parser.add_argument("--output-dir", type=Path, default=Path("dragon"))
     args = parser.parse_args()
-    today = datetime.now(timezone.utc).date()
+    now = datetime.now(timezone.utc)
+    today = now.date()
     try:
-        days = collect(args.login, os.environ.get("DRAGON_ACTIVITY_TOKEN", ""), today)
-        publish(days, args.output_dir, today)
+        from living_activity import collect_repositories
+        from living_model import develop
+        from living_renderer import render_living
+        credentials = os.environ.get("DRAGON_REPO_TOKENS", "")
+        if not credentials:
+            raise ValueError("Repository credentials missing.")
+        snapshot = collect_repositories(args.login, credentials, now)
+        days = collect(args.login, os.environ.get("DRAGON_ACTIVITY_TOKEN", ""), today, include_today=True)
+        state_path = args.output_dir / "state.json"
+        previous = json.loads(state_path.read_text()) if state_path.exists() else {}
+        model = develop(snapshot, days, previous, today)
+        outputs = {"dragon.svg": render_living(model),
+                   "still.svg": render_living(model, animated=False),
+                   "state.json": json.dumps(model["state"], indent=2) + "\n"}
+        import xml.etree.ElementTree as ET
+        ET.fromstring(outputs["dragon.svg"])
+        ET.fromstring(outputs["still.svg"])
+        args.output_dir.mkdir(parents=True, exist_ok=True)
+        for name, content in outputs.items():
+            temporary = args.output_dir / (name + ".tmp")
+            temporary.write_text(content)
+            temporary.replace(args.output_dir / name)
     except Exception:
         # Never echo API response bodies, headers, credentials, or private data.
-        parser.exit(1, "Paper Dragon failed: verify owner token, read:user scope, API access and complete calendar. Previous artwork retained.\n")
+        parser.exit(1, "Paper Dragon failed: verify DRAGON_REPO_TOKENS read-only private access, owner activity token, API limits and complete calendar. Previous artwork retained.\n")
 
 
 if __name__ == "__main__":

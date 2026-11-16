@@ -1,5 +1,6 @@
 {
-  "version": 1,
+  "version": 2,
   "stage": 2,
-  "gold": 2
+  "gold": 2,
+  "record_weeks": 4
 }
