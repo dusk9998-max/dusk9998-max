@@ -28,7 +28,7 @@ class RendererTests(unittest.TestCase):
     def test_animation_changes_body_not_just_position_and_has_static_fallback(self):
         animated = render_living(self.model())
         self.assertTrue("feDisplacementMap" in animated, "Body deformation is missing")
-        self.assertTrue("@keyframes swim" in animated, "Independent head motion is missing")
+        self.assertTrue("@keyframes swim" in animated, "Swimming motion is missing")
         self.assertTrue("prefers-reduced-motion: no-preference" in animated, "Reduced-motion guard is missing")
         still = render_living(self.model(), animated=False)
         self.assertTrue("<animate " not in still, "Still image contains SMIL motion")

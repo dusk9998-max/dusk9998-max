@@ -159,7 +159,7 @@ def main():
     today = now.date()
     try:
         from living_activity import collect_repositories
-        from living_model import develop
+        from living_model import develop, public_stats
         from living_renderer import render_living
         credentials = os.environ.get("DRAGON_REPO_TOKENS", "")
         if not credentials:
@@ -171,7 +171,8 @@ def main():
         model = develop(snapshot, days, previous, today)
         outputs = {"dragon.svg": render_living(model),
                    "still.svg": render_living(model, animated=False),
-                   "state.json": json.dumps(model["state"], indent=2) + "\n"}
+                   "state.json": json.dumps(model["state"], indent=2) + "\n",
+                   "stats.json": json.dumps(public_stats(model, now), indent=2) + "\n"}
         import xml.etree.ElementTree as ET
         ET.fromstring(outputs["dragon.svg"])
         ET.fromstring(outputs["still.svg"])

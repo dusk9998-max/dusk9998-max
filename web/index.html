@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Explore a Paper Dragon shaped by public and authorized private GitHub activity.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 32 32%27%3E%3Cpath fill=%27%23963d2b%27 d=%27M3 27L16 3l13 24-13-7z%27/%3E%3C/svg%3E">
+<title>Paper Dragon · dusk9998-max</title>
+<link rel="stylesheet" href="style.css">
+<script src="app.js" defer></script>
+</head>
+<body>
+<header><a href="https://github.com/dusk9998-max">dusk9998-max <span>↗ GitHub</span></a><span class="edition">AN ACTIVITY PORTRAIT</span></header>
+<main>
+<div class="intro"><div><p class="eyebrow">FOLDED FROM EVERY CHAPTER</p><h1>Paper Dragon</h1></div><p class="updated">Updated <time datetime="{{UPDATED}}">{{UPDATED_LABEL}}</time><br>Refreshed nightly · 00:20 UTC</p></div>
+<div class="layout">
+<section class="portrait" aria-label="Interactive dragon">
+<div id="artwork">{{DRAGON}}<div id="paper-tooltip" role="status" hidden><strong></strong><span></span></div></div>
+<div class="explore"><p id="hint">Hover over the colored paper, or choose a feature below.</p><div id="features" hidden aria-label="Dragon features">
+<button type="button" data-feature="growth" aria-pressed="true">Growth</button>
+{{LANGUAGE_BUTTONS}}
+<button type="button" data-feature="streak" aria-pressed="false">Gold &amp; streaks</button>
+<button type="button" data-feature="motion" aria-pressed="false">Motion</button>
+</div><button id="pause" type="button" aria-pressed="false" hidden>Pause motion</button></div>
+</section>
+<aside aria-label="Dragon statistics">
+<p class="eyebrow">FORM {{STAGE_NUMBER}} / 05</p><h2>{{STAGE}}</h2>
+<p class="total"><strong>{{TOTAL}}</strong> <span>unique authored commits</span></p>
+<div class="progress-block"><div class="progress-label"><span>{{NEXT_LABEL}}</span><span>{{PROGRESS_LABEL}}</span></div>{{PROGRESS}}<p class="remaining">{{REMAINING}}</p><p class="retained">Earned forms stay with the dragon.</p></div>
+<dl class="quick-stats"><div><dt>Last 7 days</dt><dd>{{RECENT}} <small>commits</small></dd></div><div><dt>Current streak</dt><dd>{{CURRENT}} <small>{{CURRENT_UNIT}}</small></dd></div><div><dt>Record streak</dt><dd>{{RECORD}} <small>{{RECORD_UNIT}}</small></dd></div></dl>
+<section id="inspection" class="inspection" aria-labelledby="detail-title"><p class="eyebrow">INSIDE THE FOLDS</p><h3 id="detail-title">Growth</h3><p id="detail-value">{{REMAINING}}</p><p id="detail-copy">Each unique authored commit on an accessible branch counts once, including authorized private repositories.</p></section>
+</aside>
+</div>
+<details class="method"><summary>How this portrait reads activity</summary><p>Growth counts unique commits linked to this GitHub identity across readable branches. Shared commits in forks count once. Language proportions describe repository language bytes, weighted by authored commits; they do not measure lines personally written. The displayed mix is normalized across the four leading languages.</p><p>Weekly streaks combine active commit dates and GitHub contribution-calendar days, in Monday–Sunday UTC weeks. Calendar counts are not added to commit totals. Access covers repositories authorized by the configured tokens; some organization or collaborator repositories may be excluded. No private repository names, messages, or commit links are published.</p><p>Gold seals unlock at 25, 100, 300, 750 and 2,000 commits. Growth forms unlock at 50, 150, 500 and 1,500 commits. Streak accents build over 13 weeks and fade after a break; record streaks permanently enrich the pigments.</p></details>
+<noscript><p class="notice">Interactive inspection needs JavaScript. Commit totals, stage progress and streaks above remain available. Language mix: {{LANGUAGE_SUMMARY}}.</p></noscript>
+</main>
+<footer><span>Public work. Private effort. One dragon.</span><a href="https://github.com/dusk9998-max/dusk9998-max">View the source ↗</a></footer>
+<script type="application/json" id="dragon-stats">{{STATS}}</script>
+</body></html>
