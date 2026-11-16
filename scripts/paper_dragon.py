@@ -95,12 +95,25 @@ def derive_state(days: dict, previous: dict, today: date) -> dict:
             "gold": max(gold, previous.get("gold", 0))}
 
 
-def render(state: dict, recent: int) -> str:
+def render(state: dict, recent: int, animated: bool = True) -> str:
     stage, gold = state["stage"], state["gold"]
-    speed = 12 if recent == 0 else 9 if recent < 10 else 6
+    speed = 8 if recent == 0 else 6 if recent < 10 else 4.5
+    motion = f"""<style>
+@keyframes float {{
+  0%, 100% {{ transform: translate(-8px, 14px) rotate(-4deg); }}
+  50% {{ transform: translate(8px, -22px) rotate(4deg); }}
+}}
+@media (prefers-reduced-motion: no-preference) {{
+  .dragon-motion {{
+    transform-origin: 390px 267px;
+    animation: float {speed}s ease-in-out infinite;
+  }}
+}}
+</style>""" if animated else ""
     pieces = [f'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 540" role="img" aria-labelledby="title desc">
 <title id="title">Paper Dragon</title>
 <desc id="desc">An ivory and vermilion origami dragon with golden seams, growing with combined public and private GitHub activity. Quiet days bring rest.</desc>
+{motion}
 <defs>
   <radialGradient id="paper"><stop stop-color="#fff9eb"/><stop offset="1" stop-color="#ead9ba"/></radialGradient>
   <linearGradient id="sun" x2="0" y2="1"><stop stop-color="#d45036"/><stop offset="1" stop-color="#c93b2b" stop-opacity=".55"/></linearGradient>
@@ -116,8 +129,7 @@ def render(state: dict, recent: int) -> str:
  <path d="M563 412h119c23 0 23-14 4-14h-37"/>
 </g>
 <g transform="translate(390 267) scale({.68 + stage * .08:.2f}) translate(-390 -267)">
-<g>
-<animateTransform attributeName="transform" type="translate" values="0 0;0 -7;0 0" dur="{speed}s" repeatCount="indefinite"/>
+<g class="dragon-motion">
 ''']
     # A tapered open coil, made of hand-folded triangular facets.
     count = 27 + stage * 4
@@ -183,7 +195,8 @@ def publish(days: dict, output: Path, today: date):
     ET.fromstring(svg)
     output.mkdir(parents=True, exist_ok=True)
     # All fetching and validation finish before either output is replaced.
-    for name, content in (("dragon.svg", svg), ("state.json", json.dumps(state, indent=2) + "\n")):
+    for name, content in (("dragon.svg", svg), ("still.svg", render(state, recent, animated=False)),
+                          ("state.json", json.dumps(state, indent=2) + "\n")):
         temporary = output / (name + ".tmp")
         temporary.write_text(content)
         temporary.replace(output / name)
