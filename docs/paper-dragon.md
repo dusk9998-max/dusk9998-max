@@ -1,8 +1,10 @@
 # Paper Dragon
 
-An original folded-paper dragon driven by the owner's combined public and private
-GitHub contribution calendar. The artwork uses vermilion, ivory, gold seams, ink
-clouds and a fixed warm-paper background. It works as a still image too.
+A reference-matched folded-paper dragon driven by the owner's combined public
+and private GitHub contribution calendar. The detailed head, flowing S-shaped
+body, layered ivory mane, textured vermilion paper and gold flowers are visible
+at every stage. The dragon floats independently over a textured paper backdrop,
+red sun and ink clouds. A still version is also available.
 
 ## Enable private activity
 
@@ -28,13 +30,16 @@ https://docs.github.com/en/account-and-profile/how-tos/contribution-settings/vie
 ## Visual rules
 
 Lifetime calendar totals unlock growth stages at 50, 150, 500 and 1,500
-contributions. Gold seams unlock at 25, 100, 300, 750 and 2,000. Earned stage
+contributions. Additional gold floral seals unlock at 25, 100, 300, 750 and 2,000. Earned stage
 and gold levels are retained in dragon/state.json; no exact totals are saved.
 Activity in the last seven completed UTC days determines an 8, 6 or 4.5
 second floating and rocking loop. Quiet weeks never remove earned growth.
-The dragon moves through a 36-unit vertical range and rocks between -4 and +4
+The dragon moves through a 36-unit vertical range and rocks between -3 and +3
 degrees. Animation is enabled only when the viewer has no reduced-motion
 preference. The README also links to dragon/still.svg for viewing without motion.
+Growth scales the same detailed artwork from 84% to 98%; it no longer adds
+geometric segments. The reference's original flowers and seams remain visible
+at every level; earned seals are separate ornaments along the lower edge.
 
 Calendar totals are used once. The restricted count is not added on top.
 The collector queries complete, non-overlapping yearly date windows through
@@ -46,7 +51,10 @@ attribute early activity to a calendar day preceding the UTC creation date.
 Only the animated/still SVGs and derived growth levels are published. Raw activity,
 private/public breakdowns, repo names, code and credentials are never saved.
 The public artwork indirectly reflects private activity, by design.
-The renderer has no external resources, scripts or dependencies.
+The renderer embeds the local dragon PNG and background JPEG directly into each
+SVG, so GitHub's image mode needs no external image requests. Source assets live
+in assets/paper-dragon/. Neither image generation nor image conversion runs in
+the nightly workflow; the standard-library renderer reuses the committed assets.
 
 ## Workflow and recovery
 
