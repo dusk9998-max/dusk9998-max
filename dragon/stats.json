@@ -1,0 +1,46 @@
+{
+  "version": 1,
+  "updated_at": "2026-11-16T22:27:05.893310+00:00",
+  "total_commits": 207,
+  "recent_commits": 13,
+  "stage": {
+    "index": 2,
+    "name": "Growing",
+    "next": {
+      "name": "Mature",
+      "threshold": 500,
+      "remaining": 293,
+      "progress": 0.16285714285714287
+    }
+  },
+  "gold": {
+    "count": 2,
+    "remaining": 93
+  },
+  "current_weeks": 1,
+  "record_weeks": 4,
+  "accent": 0.0769,
+  "mood": "busy",
+  "palette": [
+    {
+      "name": "JavaScript",
+      "color": "#f1e05a",
+      "share": 0.7215077725678233
+    },
+    {
+      "name": "Python",
+      "color": "#3572A5",
+      "share": 0.24072317847860675
+    },
+    {
+      "name": "TypeScript",
+      "color": "#3178c6",
+      "share": 0.030548578872553293
+    },
+    {
+      "name": "Shell",
+      "color": "#89e051",
+      "share": 0.007220470081016774
+    }
+  ]
+}
