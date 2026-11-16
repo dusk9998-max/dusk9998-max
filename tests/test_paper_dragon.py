@@ -5,10 +5,26 @@ from datetime import date
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
-from paper_dragon import api, calendar_days, derive_state, require_owner, require_scope, windows, render
+from paper_dragon import api, collect, calendar_days, derive_state, require_owner, require_scope, windows, render
 
 
 class ActivityTests(unittest.TestCase):
+    def test_creation_utc_date_does_not_drop_previous_calendar_day(self):
+        from datetime import timedelta
+        from unittest.mock import patch
+        viewer = {"login": "dusk9998-max", "createdAt": "2026-08-10T02:10:35Z"}
+        first, last = date(2026, 1, 1), date(2026, 8, 10)
+        days = [{"date": (first + timedelta(days=i)).isoformat(),
+                 "contributionCount": 8 if first + timedelta(days=i) == date(2026, 8, 9) else 0}
+                for i in range((last - first).days + 1)]
+        payload = {"data": {"viewer": dict(viewer, contributionsCollection={
+            "contributionCalendar": {"totalContributions": 8,
+                                     "weeks": [{"contributionDays": days}]}})}}
+        with patch("paper_dragon.api", side_effect=[{"data": {"viewer": viewer}}, payload]):
+            result = collect("dusk9998-max", "test-only", date(2026, 8, 11))
+        self.assertEqual(sum(result.values()), 8)
+        self.assertEqual(result[date(2026, 8, 9)], 8)
+
     def setUp(self):
         self.payload = {"data": {"viewer": {"login": "dusk9998-max",
             "contributionsCollection": {"restrictedContributionsCount": 3,

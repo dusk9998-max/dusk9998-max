@@ -37,6 +37,8 @@ Calendar totals are used once. The restricted count is not added on top.
 The collector queries complete, non-overlapping yearly date windows through
 yesterday UTC and rejects missing days, duplicate dates, mismatched totals,
 GraphQL errors, identity mismatch and missing read:user scope.
+Collection starts on January 1 of the account's creation year: GitHub may
+attribute early activity to a calendar day preceding the UTC creation date.
 
 Only the generated SVG and derived growth levels are published. Raw activity,
 private/public breakdowns, repo names, code and credentials are never saved.

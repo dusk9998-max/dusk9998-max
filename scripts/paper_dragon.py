@@ -71,7 +71,9 @@ def calendar_days(payload: dict, login: str, first: date, last: date) -> dict:
 def collect(login: str, token: str, today: date) -> dict:
     viewer = api("query { viewer { login createdAt } }", {}, token)["data"]["viewer"]
     require_owner(viewer, login)
-    first = date.fromisoformat(viewer["createdAt"][:10])
+    # Calendar attribution can precede the UTC creation date. Query the entire
+    # creation year rather than clipping legitimate early contribution days.
+    first = date(int(viewer["createdAt"][:4]), 1, 1)
     days = {}
     for start, end in windows(first, today - timedelta(days=1)):
         payload = api(QUERY, {"from": start.isoformat() + "T00:00:00Z",
