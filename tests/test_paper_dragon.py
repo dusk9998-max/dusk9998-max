@@ -110,6 +110,18 @@ class ActivityTests(unittest.TestCase):
         ET.fromstring(still)
         self.assertNotIn("<style>", still)
 
+    def test_reference_art_is_embedded_in_image_mode(self):
+        import base64
+        import xml.etree.ElementTree as ET
+        root = ET.fromstring(render({"version": 1, "stage": 2, "gold": 2}, 0))
+        images = root.findall(".//{http://www.w3.org/2000/svg}image")
+        self.assertEqual(len(images), 2)
+        for layer in images:
+            uri = layer.attrib["href"]
+            self.assertTrue(uri.startswith(("data:image/png;base64,", "data:image/jpeg;base64,")))
+            self.assertTrue(base64.b64decode(uri.split(",", 1)[1]).startswith((b"\x89PNG\r\n\x1a\n", b"\xff\xd8\xff")))
+        self.assertLess(len(ET.tostring(root)), 4_000_000)
+
 
 if __name__ == "__main__":
     unittest.main()
