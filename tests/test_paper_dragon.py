@@ -5,7 +5,14 @@ from datetime import date
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
-from paper_dragon import api, collect, calendar_days, derive_state, require_owner, require_scope, windows, render
+from paper_dragon import api, collect, calendar_days, require_owner, require_scope, windows
+
+from living_model import develop
+from living_renderer import render_living
+
+
+def model(total=0, previous=None):
+    return develop({"total": total, "recent": 0, "daily": {}, "palette": []}, {}, previous or {}, date(2026, 1, 2))
 
 
 class ActivityTests(unittest.TestCase):
@@ -69,7 +76,7 @@ class ActivityTests(unittest.TestCase):
 
     def test_invalid_state_is_rejected(self):
         with self.assertRaises(ValueError):
-            derive_state({}, {"version": 1, "stage": 999, "gold": 0}, date(2026, 1, 2))
+            model(previous={"version": 1, "stage": 999, "gold": 0})
 
     def test_failed_collection_retains_existing_image(self):
         import os
@@ -92,28 +99,28 @@ class ActivityTests(unittest.TestCase):
                           (date(2025, 1, 1), date(2025, 1, 2))])
 
     def test_growth_is_bounded_and_retained(self):
-        self.assertEqual(derive_state({}, {}, date(2026, 1, 2))["stage"], 0)
-        self.assertEqual(derive_state({date(2026, 1, 1): 1000000}, {}, date(2026, 1, 2))["stage"], 4)
+        self.assertEqual(model()["state"]["stage"], 0)
+        self.assertEqual(model(1000000)["state"]["stage"], 4)
         prior = {"version": 1, "stage": 3, "gold": 4}
-        self.assertEqual(derive_state({}, prior, date(2026, 1, 2)), prior)
+        self.assertEqual((model(previous=prior)["state"]["stage"], model(previous=prior)["state"]["gold"]), (3, 4))
 
     def test_svg_is_self_contained_and_valid(self):
         import xml.etree.ElementTree as ET
-        svg = render({"version": 1, "stage": 2, "gold": 2}, 0)
+        svg = render_living(model(180))
         ET.fromstring(svg)
         for forbidden in ("<script", "http://", "https://", "contributionCount", "restricted"):
             # The XML namespace URI is the sole non-resource URI.
             self.assertNotIn(forbidden, svg.replace("http://www.w3.org/2000/svg", ""))
         self.assertIn("@media (prefers-reduced-motion: no-preference)", svg)
         self.assertIn("<title", svg)
-        still = render({"version": 1, "stage": 2, "gold": 2}, 0, animated=False)
+        still = render_living(model(180), animated=False)
         ET.fromstring(still)
         self.assertNotIn("<style>", still)
 
     def test_reference_art_is_embedded_in_image_mode(self):
         import base64
         import xml.etree.ElementTree as ET
-        root = ET.fromstring(render({"version": 1, "stage": 2, "gold": 2}, 0))
+        root = ET.fromstring(render_living(model(180)))
         images = root.findall(".//{http://www.w3.org/2000/svg}image")
         self.assertEqual(len(images), 2)
         for layer in images:
