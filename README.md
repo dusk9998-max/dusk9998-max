@@ -1,3 +1,3 @@
 # dusk9998-max
 
-![my koi](koi/koi.gif)
+<img src="dragon/dragon.svg" width="640" alt="My Paper Dragon, growing with public and private GitHub activity" />
