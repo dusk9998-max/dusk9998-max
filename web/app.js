@@ -10,6 +10,15 @@
   const number = n => n.toLocaleString();
   document.getElementById("features").hidden = false;
   buttons.forEach(button => button.setAttribute("aria-controls", "inspection"));
+  const tooltip = document.getElementById("paper-tooltip");
+  function showTooltip() {
+    if (tooltip.querySelector("strong").textContent !== title.textContent)
+      tooltip.querySelector("strong").textContent = title.textContent;
+    if (tooltip.querySelector("span").textContent !== value.textContent)
+      tooltip.querySelector("span").textContent = value.textContent;
+    tooltip.hidden = false;
+  }
+  let displayed;
   let selected = "growth";
   function inspect(feature) {
     let heading, amount, explanation;
@@ -21,7 +30,7 @@
       explanation = "These colored paper panels represent repository language proportions, weighted by your authored commits. Private and public repositories authorized by your tokens contribute. This is not a count of lines personally written.";
     } else if (feature === "streak") {
       heading = "Gold & streaks";
-      amount = `${stats.gold.count} gold seals · ${stats.current_weeks} current weeks · ${stats.record_weeks} record weeks`;
+      amount = `${stats.gold.count} gold seals · ${stats.current_weeks} current streak weeks · ${stats.record_weeks} record weeks`;
       explanation = `${stats.gold.remaining === null ? "Every gold seal is earned." : `${number(stats.gold.remaining)} more commits unlock the next seal.`} The streak accent is ${Math.round(stats.accent * 100)}% full. Consecutive active UTC weeks build the accent; the record permanently enriches pigments.`;
     } else if (feature === "motion") {
       heading = {rest: "Quiet breathing", active: "Steady swimming", busy: "Busy current"}[stats.mood];
@@ -33,6 +42,8 @@
       amount = stats.stage.next ? `${number(stats.stage.next.remaining)} more commits to ${stats.stage.next.name}` : "Elder reached · every growth form is unlocked";
       explanation = `${number(stats.total_commits)} unique authored commits counted. Each linked commit counts once across accessible branches and forks. Earned forms are retained even if repositories or branches later become unavailable.`;
     }
+    if (displayed === feature) return;
+    displayed = feature;
     title.textContent = heading;
     value.textContent = amount;
     copy.textContent = explanation;
@@ -42,10 +53,11 @@
     button.addEventListener("pointerenter", () => inspect(button.dataset.feature));
     button.addEventListener("pointerleave", () => inspect(selected));
     button.addEventListener("focus", () => inspect(button.dataset.feature));
-    button.addEventListener("click", () => { selected = button.dataset.feature; inspect(selected); });
+    button.addEventListener("click", () => { selected = button.dataset.feature; inspect(selected);
+      if (matchMedia("(max-width:650px)").matches) showTooltip(); });
   });
   document.addEventListener("keydown", event => {
-    if (event.key === "Escape") { selected = "growth"; inspect(selected); }
+    if (event.key === "Escape") { selected = "growth"; inspect(selected); tooltip.hidden = true; }
   });
   const pause = document.getElementById("pause");
   pause.hidden = false;
@@ -70,6 +82,13 @@
       function hit(event) {
         // This transform follows the animated creature. The small displacement
         // filter can shift the outermost edge slightly; keyboard controls are exact.
+        const rootMatrix = svg.getScreenCTM();
+        if (rootMatrix) {
+          const rootPoint = new DOMPoint(event.clientX, event.clientY).matrixTransform(rootMatrix.inverse());
+          for (let i = 0; i < stats.gold.count; i++) {
+            if (Math.hypot(rootPoint.x - (650 + i * 23), rootPoint.y - 609) < 12) return "streak";
+          }
+        }
         const matrix = svg.querySelector(".body").getScreenCTM();
         if (!matrix) return null;
         const point = new DOMPoint(event.clientX, event.clientY).matrixTransform(matrix.inverse());
@@ -91,12 +110,17 @@
       }
       artwork.classList.add("ready");
       artwork.addEventListener("pointermove", event => {
-        if (event.pointerType !== "touch") inspect(hit(event) || selected);
+        if (event.pointerType !== "touch") {
+          const feature = hit(event);
+          inspect(feature || selected);
+          if (feature) showTooltip(); else tooltip.hidden = true;
+        }
       });
-      artwork.addEventListener("pointerleave", () => inspect(selected));
+      artwork.addEventListener("pointerleave", () => { inspect(selected); tooltip.hidden = true; });
       artwork.addEventListener("click", event => {
         const feature = hit(event);
-        if (feature) { selected = feature; inspect(feature); }
+        if (feature) { selected = feature; inspect(feature); showTooltip(); }
+        else tooltip.hidden = true;
       });
       document.getElementById("hint").textContent = "Hover or tap the colored paper. The controls below work with a keyboard, too.";
     } catch {
