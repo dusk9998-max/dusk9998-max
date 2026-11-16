@@ -1,6 +1,10 @@
 """Progression rules; receives aggregates, never private repository identities."""
 from datetime import timedelta
 
+STAGE_THRESHOLDS = (0, 50, 150, 500, 1500)
+GOLD_THRESHOLDS = (25, 100, 300, 750, 2000)
+STAGE_NAMES = ("Hatchling", "Young", "Growing", "Mature", "Elder")
+
 
 def monday(day):
     return day - timedelta(days=day.weekday())
@@ -46,16 +50,39 @@ def develop(snapshot, calendar, previous, today):
         quiet = (monday(today) - end).days / 7 - 1
         accent = min(1, count / 13) * max(0, 1 - quiet / 6) ** 2
     total, recent = snapshot["total"], snapshot["recent"]
-    stage = max(previous.get("stage", 0), sum(total >= n for n in (50, 150, 500, 1500)))
-    gold = max(previous.get("gold", 0), sum(total >= n for n in (25, 100, 300, 750, 2000)))
+    stage = max(previous.get("stage", 0), sum(total >= n for n in STAGE_THRESHOLDS[1:]))
+    gold = max(previous.get("gold", 0), sum(total >= n for n in GOLD_THRESHOLDS))
     weights = sum(item["weight"] for item in snapshot["palette"])
     palette = [dict(name=item["name"], color=item["color"], share=item["weight"] / weights)
                for item in snapshot["palette"]] if weights else []
     return {
         "state": {"version": 2, "stage": stage, "gold": gold, "record_weeks": record},
+        "total_commits": total, "recent_commits": recent,
         "current_weeks": current, "accent": round(accent, 4),
         "vividness": .65 + .55 * min(1, record / 52),
         "metallic": min(1, record / 208), "palette": palette,
         "mood": "rest" if recent == 0 else "active" if recent < 10 else "busy",
         "milestone": stage > previous.get("stage", stage) or gold > previous.get("gold", gold),
     }
+
+
+def public_stats(model, now):
+    """Explicit allowlist: never serialize the raw collector or private identities."""
+    stage, gold = model["state"]["stage"], model["state"]["gold"]
+    total = model["total_commits"]
+    next_stage = None
+    if stage < len(STAGE_THRESHOLDS) - 1:
+        floor, goal = STAGE_THRESHOLDS[stage:stage + 2]
+        next_stage = {"name": STAGE_NAMES[stage + 1], "threshold": goal,
+                      "remaining": max(0, goal - total),
+                      "progress": max(0, min(1, (total - floor) / (goal - floor)))}
+    return {"version": 1, "updated_at": now.isoformat(),
+            "total_commits": total, "recent_commits": model["recent_commits"],
+            "stage": {"index": stage, "name": STAGE_NAMES[stage], "next": next_stage},
+            "gold": {"count": gold, "remaining": max(0, GOLD_THRESHOLDS[gold] - total)
+                     if gold < len(GOLD_THRESHOLDS) else None},
+            "current_weeks": model["current_weeks"],
+            "record_weeks": model["state"]["record_weeks"],
+            "accent": model["accent"], "mood": model["mood"],
+            "palette": [{key: item[key] for key in ("name", "color", "share")}
+                        for item in model["palette"]]}

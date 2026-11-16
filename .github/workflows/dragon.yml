@@ -34,8 +34,22 @@ jobs:
             dragon/dragon.svg
             dragon/still.svg
             dragon/state.json
+            dragon/stats.json
           if-no-files-found: error
           retention-days: 1
+
+      - name: Build interactive portrait
+        run: python3 scripts/build_site.py --source dragon --output _site
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: dragon-site-preview
+          path: _site
+          if-no-files-found: error
+          retention-days: 1
+      - uses: actions/upload-pages-artifact@56afc609e74202658d3ffba0e8f6dda462b719fa # v3.0.1
+        if: github.ref == 'refs/heads/main'
+        with:
+          path: _site
 
   publish:
     needs: render
@@ -61,7 +75,7 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         shell: bash
         run: |
-          git add -- dragon/dragon.svg dragon/still.svg dragon/state.json
+          git add -- dragon/dragon.svg dragon/still.svg dragon/state.json dragon/stats.json
           if git diff --cached --quiet; then
             echo "The dragon is unchanged."
             exit 0
@@ -71,3 +85,19 @@ jobs:
           git commit -m "dragon: fold the next chapter"
           AUTH=$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)
           git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH" push origin HEAD
+
+  deploy-portrait:
+    if: github.ref == 'refs/heads/main'
+    needs: [render, publish]
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Publish interactive portrait
+        id: deployment
+        uses: actions/deploy-pages@d6db90164ac5ed86f2b6aed7e0febac5b3c0c03e # v4.0.5

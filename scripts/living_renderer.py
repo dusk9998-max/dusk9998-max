@@ -1,10 +1,11 @@
 """Self-contained language-colored growth forms with continuous body animation."""
 import colorsys
 from html import escape
+from living_model import STAGE_NAMES
 from dragon_art import embedded_art
 
 FORMS = ("hatchling.png", "young.png", "dragon.png", "mature.png", "elder.png")
-NAMES = ("Hatchling", "Young", "Growing", "Mature", "Elder")
+NAMES = STAGE_NAMES
 
 
 def color_filter(identifier, hue, saturation):
@@ -23,7 +24,7 @@ def render_living(model, animated=True):
     stage, mood = state["stage"], model["mood"]
     speed = {"rest": 10, "active": 6, "busy": 4.5}[mood]
     amplitude = {"rest": 2, "active": 10, "busy": 16}[mood]
-    definitions, panels, legend = [], [], []
+    definitions, panels = [], []
     start = 0
     for i, item in enumerate(palette):
         color = item["color"].lstrip("#")
@@ -32,8 +33,7 @@ def render_living(model, animated=True):
         definitions.append(color_filter("language-" + str(i), hue, model["vividness"]))
         height = 640 * item["share"]
         definitions.append(f'<clipPath id="panel-{i}"><rect x="0" y="{start:.3f}" width="800" height="{height + .5:.3f}"/></clipPath>')
-        panels.append(f'<use href="#dragon-art" filter="url(#language-{i})" clip-path="url(#panel-{i})"/>')
-        legend.append(f'<text x="{40 + i * 190}" y="660" fill="{item["color"]}" font-family="sans-serif" font-size="12">{escape(item["name"])} {item["share"]:.0%}</text>')
+        panels.append(f'<use data-language-index="{i}" aria-label="{escape(item["name"], quote=True)}" href="#dragon-art" filter="url(#language-{i})" clip-path="url(#panel-{i})"/>')
         start += height
     definitions.append(color_filter("streak-accent", 38, 1.1))
     definitions.append('<clipPath id="fins"><path d="M0 300H380V420H800V640H0Z"/></clipPath>')
@@ -63,7 +63,7 @@ def render_living(model, animated=True):
     wake_marks = ""
     if mood == "busy":
         wake_marks = "".join(f'<circle class="wake" cx="{160 + i * 18}" cy="{500 - i * 6}" r="{2 + i % 2}" fill="#c49a51" opacity="0" style="animation-delay:{-i * .65}s"/>' for i in range(6))
-    return f'''<svg xmlns="http://www.w3.org/2000/svg" width="800" height="675" viewBox="0 0 800 675" role="img" aria-labelledby="title desc">
+    return f'''<svg xmlns="http://www.w3.org/2000/svg" width="800" height="640" viewBox="0 0 800 640" role="img" aria-labelledby="title desc">
 <title id="title">{NAMES[stage]} Paper Dragon</title>
 <desc id="desc">A {NAMES[stage].lower()} folded-paper dragon. Language mix colors the paper panels; weekly streaks fill fins with gold, record streaks enrich the pigments. Motion mode: {mood}. Public and authorized private working branches contribute.</desc>
 {style}
@@ -75,12 +75,11 @@ def render_living(model, animated=True):
 </filter>
 {''.join(definitions)}
 </defs>
-<image width="800" height="675" preserveAspectRatio="xMidYMid slice" href="{background}"/>
+<image width="800" height="640" preserveAspectRatio="xMidYMid slice" href="{background}"/>
 {wake_marks}
 <g class="arrival"><g class="creature">
 <g class="body">{painted}</g>
 <use class="metallic" href="#dragon-art" opacity="0"/>
 </g></g>
 {gold}
-{''.join(legend)}
 </svg>'''

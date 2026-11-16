@@ -50,3 +50,24 @@ Reduced-motion preference disables movement, and still.svg is always available.
 
 Nightly collection runs at 00:20 UTC and also supports workflow_dispatch.
 No generated preview statistics are used for profile output.
+
+## Interactive portrait
+
+The README image links to the GitHub Pages portrait at
+https://dusk9998-max.github.io/dusk9998-max/. README images cannot run interactive
+JavaScript. The profile image has no language legend; color inspection is on the
+portrait page, with equivalent keyboard buttons and touch selection.
+
+The nightly collector also publishes dragon/stats.json: aggregate unique commits,
+seven-day commits, current/record weekly streaks, stage, gold, language proportions,
+next-stage remaining commits and an update timestamp. No private repository names,
+branch identities, messages or SHAs are included. Stage thresholds are shared
+with the model. A retained stage can exceed today's reachable-commit count; earned
+forms persist, but remaining commits are measured against the next absolute goal.
+
+Enable Pages with GitHub Actions as the publishing source before the first main
+run. The render job builds a static portrait artifact without external services;
+only a main run that successfully publishes art can deploy it. The deployment job
+has Pages and OIDC permissions, and has no repository activity credentials.
+Branch runs upload a preview artifact and never deploy the live site.
+The static page includes totals and growth progress even without JavaScript.
