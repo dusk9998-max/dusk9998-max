@@ -104,8 +104,11 @@ class ActivityTests(unittest.TestCase):
         for forbidden in ("<script", "http://", "https://", "contributionCount", "restricted"):
             # The XML namespace URI is the sole non-resource URI.
             self.assertNotIn(forbidden, svg.replace("http://www.w3.org/2000/svg", ""))
-        self.assertIn("<animateTransform", svg)
+        self.assertIn("@media (prefers-reduced-motion: no-preference)", svg)
         self.assertIn("<title", svg)
+        still = render({"version": 1, "stage": 2, "gold": 2}, 0, animated=False)
+        ET.fromstring(still)
+        self.assertNotIn("<style>", still)
 
 
 if __name__ == "__main__":

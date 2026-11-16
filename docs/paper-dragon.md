@@ -30,8 +30,11 @@ https://docs.github.com/en/account-and-profile/how-tos/contribution-settings/vie
 Lifetime calendar totals unlock growth stages at 50, 150, 500 and 1,500
 contributions. Gold seams unlock at 25, 100, 300, 750 and 2,000. Earned stage
 and gold levels are retained in dragon/state.json; no exact totals are saved.
-Activity in the last seven completed UTC days determines a slow 12, 9 or 6
-second floating loop. Quiet weeks never remove earned growth.
+Activity in the last seven completed UTC days determines an 8, 6 or 4.5
+second floating and rocking loop. Quiet weeks never remove earned growth.
+The dragon moves through a 36-unit vertical range and rocks between -4 and +4
+degrees. Animation is enabled only when the viewer has no reduced-motion
+preference. The README also links to dragon/still.svg for viewing without motion.
 
 Calendar totals are used once. The restricted count is not added on top.
 The collector queries complete, non-overlapping yearly date windows through
@@ -40,7 +43,7 @@ GraphQL errors, identity mismatch and missing read:user scope.
 Collection starts on January 1 of the account's creation year: GitHub may
 attribute early activity to a calendar day preceding the UTC creation date.
 
-Only the generated SVG and derived growth levels are published. Raw activity,
+Only the animated/still SVGs and derived growth levels are published. Raw activity,
 private/public breakdowns, repo names, code and credentials are never saved.
 The public artwork indirectly reflects private activity, by design.
 The renderer has no external resources, scripts or dependencies.
