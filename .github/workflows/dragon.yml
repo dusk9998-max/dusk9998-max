@@ -24,6 +24,7 @@ jobs:
         run: python3 -m unittest discover -s tests -v
       - name: Collect owner activity and draw
         env:
+          DRAGON_REPO_TOKENS: ${{ secrets.DRAGON_REPO_TOKENS }}
           DRAGON_ACTIVITY_TOKEN: ${{ secrets.DRAGON_ACTIVITY_TOKEN }}
         run: python3 scripts/paper_dragon.py --login dusk9998-max --output-dir dragon
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
