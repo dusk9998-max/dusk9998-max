@@ -71,3 +71,13 @@ only a main run that successfully publishes art can deploy it. The deployment jo
 has Pages and OIDC permissions, and has no repository activity credentials.
 Branch runs upload a preview artifact and never deploy the live site.
 The static page includes totals and growth progress even without JavaScript.
+
+## Owner refresh
+
+Refresh dragon opens the authenticated Paper Dragon workflow in a new tab. The
+owner selects Run workflow on main. The original page checks the public deployed
+stats every ten seconds while visible, then reloads both artwork and stats together
+when a newer deployment appears. It stops after twenty minutes, or when Stop
+watching is selected. Stopping the watcher does not cancel a GitHub run. Network
+failures retain the displayed dragon. Public visitors cannot dispatch the workflow.
+No activity credentials are sent to the browser; GitHub handles owner authorization.

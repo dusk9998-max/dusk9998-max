@@ -8,11 +8,16 @@
 <title>Paper Dragon · dusk9998-max</title>
 <link rel="stylesheet" href="style.css">
 <script src="app.js" defer></script>
+<script src="refresh.js" defer></script>
 </head>
 <body>
 <header><a href="https://github.com/dusk9998-max">dusk9998-max <span>↗ GitHub</span></a><span class="edition">AN ACTIVITY PORTRAIT</span></header>
 <main>
-<div class="intro"><div><p class="eyebrow">FOLDED FROM EVERY CHAPTER</p><h1>Paper Dragon</h1></div><p class="updated">Updated <time datetime="{{UPDATED}}">{{UPDATED_LABEL}}</time><br>Refreshed nightly · 00:20 UTC</p></div>
+<div class="intro"><div><p class="eyebrow">FOLDED FROM EVERY CHAPTER</p><h1>Paper Dragon</h1></div><div class="refresh-controls"><p class="updated">Updated <time datetime="{{UPDATED}}">{{UPDATED_LABEL}}</time><br>Refreshed nightly · 00:20 UTC</p>
+<a id="refresh-dragon" class="refresh-button" href="https://github.com/dusk9998-max/dusk9998-max/actions/workflows/dragon.yml" target="_blank" rel="noopener noreferrer" aria-describedby="refresh-help">↻ Refresh dragon <span aria-hidden="true">↗</span></a>
+<p id="refresh-help">Owner refresh · opens GitHub Actions</p></div></div>
+<div class="refresh-feedback"><p id="refresh-status" role="status" aria-live="polite"></p><button id="cancel-refresh" type="button" hidden>Stop watching</button></div>
+<noscript><p class="notice">To refresh, open GitHub Actions using Refresh dragon, run the workflow on main, then reload this page after deployment.</p></noscript>
 <div class="layout">
 <section class="portrait" aria-label="Interactive dragon">
 <div id="artwork">{{DRAGON}}<div id="paper-tooltip" role="status" hidden><strong></strong><span></span></div></div>
