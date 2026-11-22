@@ -22,6 +22,8 @@ jobs:
           persist-credentials: false
       - name: Test collector and renderer
         run: python3 -m unittest discover -s tests -v
+      - name: Test refresh behavior
+        run: node --test tests/test_refresh.cjs
       - name: Collect owner activity and draw
         env:
           DRAGON_REPO_TOKENS: ${{ secrets.DRAGON_REPO_TOKENS }}

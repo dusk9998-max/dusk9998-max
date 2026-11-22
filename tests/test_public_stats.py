@@ -63,3 +63,7 @@ class PublicStatsTests(unittest.TestCase):
             self.assertTrue('&lt;/script&gt;' in html)
             self.assertTrue('{{TOTAL}}' in html)  # API text is not expanded again.
             self.assertTrue((output / "app.js").exists())
+            self.assertTrue((output / "refresh.js").exists())
+            self.assertEqual(json.loads((output / "stats.json").read_text()), self.stats(model))
+            self.assertIn('id="refresh-dragon"', html)
+            self.assertIn('actions/workflows/dragon.yml', html)

@@ -39,8 +39,9 @@ def build(source: Path, destination: Path):
     html = re.sub(r"\{\{([A-Z_]+)\}\}", lambda match: replacements[match[1]], (template / "index.html").read_text())
     destination.mkdir(parents=True, exist_ok=True)
     (destination / "index.html").write_text(html)
-    for name in ("style.css", "app.js"):
+    for name in ("style.css", "app.js", "refresh.js"):
         shutil.copyfile(template / name, destination / name)
+    shutil.copyfile(source / "stats.json", destination / "stats.json")
     (destination / ".nojekyll").touch()
 
 
