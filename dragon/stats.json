@@ -1,21 +1,21 @@
 {
   "version": 1,
-  "updated_at": "2026-11-22T06:56:47.506027+00:00",
-  "total_commits": 206,
-  "recent_commits": 12,
+  "updated_at": "2026-11-22T10:59:01.342340+00:00",
+  "total_commits": 224,
+  "recent_commits": 30,
   "stage": {
     "index": 2,
     "name": "Growing",
     "next": {
       "name": "Mature",
       "threshold": 500,
-      "remaining": 294,
-      "progress": 0.16
+      "remaining": 276,
+      "progress": 0.21142857142857144
     }
   },
   "gold": {
     "count": 2,
-    "remaining": 94
+    "remaining": 76
   },
   "current_weeks": 1,
   "record_weeks": 4,
@@ -25,22 +25,22 @@
     {
       "name": "JavaScript",
       "color": "#f1e05a",
-      "share": 0.7438042305964001
+      "share": 0.7382426674671607
     },
     {
       "name": "Python",
       "color": "#3572A5",
-      "share": 0.21770314891187187
+      "share": 0.2095914247286658
     },
     {
       "name": "TypeScript",
       "color": "#3178c6",
-      "share": 0.03079000088095682
+      "share": 0.0283018601805481
     },
     {
       "name": "HTML",
       "color": "#e34c26",
-      "share": 0.007702619610771187
+      "share": 0.023864047623625435
     }
   ]
 }
