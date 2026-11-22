@@ -65,7 +65,7 @@ def render_living(model, animated=True):
         wake_marks = "".join(f'<circle class="wake" cx="{160 + i * 18}" cy="{500 - i * 6}" r="{2 + i % 2}" fill="#c49a51" opacity="0" style="animation-delay:{-i * .65}s"/>' for i in range(6))
     return f'''<svg xmlns="http://www.w3.org/2000/svg" width="800" height="640" viewBox="0 0 800 640" role="img" aria-labelledby="title desc">
 <title id="title">{NAMES[stage]} Paper Dragon</title>
-<desc id="desc">A {NAMES[stage].lower()} folded-paper dragon. Language mix colors the paper panels; weekly streaks fill fins with gold, record streaks enrich the pigments. Motion mode: {mood}. Public and authorized private working branches contribute.</desc>
+<desc id="desc">A {NAMES[stage].lower()} folded-paper dragon. Language mix colors the paper panels; weekly streaks fill fins with gold, record streaks enrich the pigments. Motion mode: {mood}. Growth and motion follow the GitHub contribution calendar.</desc>
 {style}
 <defs>
 <image id="dragon-art" x="26" y="20" width="748" height="600" preserveAspectRatio="xMidYMid meet" href="{sprite}"/>

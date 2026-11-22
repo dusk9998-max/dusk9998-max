@@ -12,7 +12,7 @@ from living_renderer import render_living
 
 
 def model(total=0, previous=None):
-    return develop({"total": total, "recent": 0, "daily": {}, "palette": []}, {}, previous or {}, date(2026, 1, 2))
+    return develop({"total": total, "recent": 0, "daily": {}, "palette": []}, {date(2026, 1, 2): total}, previous or {}, date(2026, 1, 2))
 
 
 class ActivityTests(unittest.TestCase):

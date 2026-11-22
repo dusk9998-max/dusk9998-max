@@ -35,7 +35,6 @@ def develop(snapshot, calendar, previous, today):
                 or not 0 <= previous.get("record_weeks", 0) <= 10000):
             raise ValueError("Invalid retained development state.")
     active = {day for day, count in calendar.items() if count > 0}
-    active.update(day for day, count in snapshot["daily"].items() if count > 0)
     current, longest, weeks = streaks(active, today)
     record = max(longest, previous.get("record_weeks", 0))
     # Current streak fills an accent over 13 active weeks. When broken, the last
@@ -49,7 +48,8 @@ def develop(snapshot, calendar, previous, today):
             cursor -= timedelta(weeks=1)
         quiet = (monday(today) - end).days / 7 - 1
         accent = min(1, count / 13) * max(0, 1 - quiet / 6) ** 2
-    total, recent = snapshot["total"], snapshot["recent"]
+    total = sum(calendar.values())
+    recent = sum(count for day, count in calendar.items() if today - timedelta(days=6) <= day <= today)
     stage = max(previous.get("stage", 0), sum(total >= n for n in STAGE_THRESHOLDS[1:]))
     gold = max(previous.get("gold", 0), sum(total >= n for n in GOLD_THRESHOLDS))
     weights = sum(item["weight"] for item in snapshot["palette"])
@@ -57,7 +57,7 @@ def develop(snapshot, calendar, previous, today):
                for item in snapshot["palette"]] if weights else []
     return {
         "state": {"version": 2, "stage": stage, "gold": gold, "record_weeks": record},
-        "total_commits": total, "recent_commits": recent,
+        "total_contributions": total, "recent_contributions": recent,
         "current_weeks": current, "accent": round(accent, 4),
         "vividness": .65 + .55 * min(1, record / 52),
         "metallic": min(1, record / 208), "palette": palette,
@@ -69,15 +69,15 @@ def develop(snapshot, calendar, previous, today):
 def public_stats(model, now):
     """Explicit allowlist: never serialize the raw collector or private identities."""
     stage, gold = model["state"]["stage"], model["state"]["gold"]
-    total = model["total_commits"]
+    total = model["total_contributions"]
     next_stage = None
     if stage < len(STAGE_THRESHOLDS) - 1:
         floor, goal = STAGE_THRESHOLDS[stage:stage + 2]
         next_stage = {"name": STAGE_NAMES[stage + 1], "threshold": goal,
                       "remaining": max(0, goal - total),
                       "progress": max(0, min(1, (total - floor) / (goal - floor)))}
-    return {"version": 1, "updated_at": now.isoformat(),
-            "total_commits": total, "recent_commits": model["recent_commits"],
+    return {"version": 2, "updated_at": now.isoformat(),
+            "total_contributions": total, "recent_contributions": model["recent_contributions"],
             "stage": {"index": stage, "name": STAGE_NAMES[stage], "next": next_stage},
             "gold": {"count": gold, "remaining": max(0, GOLD_THRESHOLDS[gold] - total)
                      if gold < len(GOLD_THRESHOLDS) else None},

@@ -13,7 +13,7 @@ class RendererTests(unittest.TestCase):
     def model(self, total=180, recent=12):
         return develop({"total": total, "recent": recent, "daily": {},
                         "palette": [{"name": "Python", "color": "#3572A5", "weight": 1}]},
-                       {}, {}, __import__("datetime").date(2026, 11, 16))
+                       {__import__("datetime").date(2026, 11, 16): total}, {}, __import__("datetime").date(2026, 11, 16))
 
     def test_all_five_forms_are_distinct_embedded_assets(self):
         fingerprints = set()
