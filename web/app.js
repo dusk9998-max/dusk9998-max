@@ -1,6 +1,10 @@
 "use strict";
 (() => {
   const stats = JSON.parse(document.getElementById("dragon-stats").textContent);
+  const calendar = stats.version === 2;
+  const unit = calendar ? "contributions" : "commits";
+  const total = calendar ? stats.total_contributions : stats.total_commits;
+  const recent = calendar ? stats.recent_contributions : stats.recent_commits;
   const artwork = document.getElementById("artwork");
   const svg = artwork.querySelector("svg");
   const buttons = [...document.querySelectorAll("[data-feature]")];
@@ -31,16 +35,16 @@
     } else if (feature === "streak") {
       heading = "Gold & streaks";
       amount = `${stats.gold.count} gold seals · ${stats.current_weeks} current streak weeks · ${stats.record_weeks} record weeks`;
-      explanation = `${stats.gold.remaining === null ? "Every gold seal is earned." : `${number(stats.gold.remaining)} more commits unlock the next seal.`} The streak accent is ${Math.round(stats.accent * 100)}% full. Consecutive active UTC weeks build the accent; the record permanently enriches pigments.`;
+      explanation = `${stats.gold.remaining === null ? "Every gold seal is earned." : `${number(stats.gold.remaining)} more ${unit} unlock the next seal.`} The streak accent is ${Math.round(stats.accent * 100)}% full. Consecutive active UTC weeks build the accent; the record permanently enriches pigments.`;
     } else if (feature === "motion") {
       heading = {rest: "Quiet breathing", active: "Steady swimming", busy: "Busy current"}[stats.mood];
-      amount = `${number(stats.recent_commits)} commits in the last seven days`;
-      explanation = "Zero commits gives gentle breathing, 1–9 gives swimming, and 10 or more adds faster undulation and a gold wake. The window includes today. Reduced-motion preferences are respected.";
+      amount = `${number(recent)} ${unit} in the last seven days`;
+      explanation = `Zero ${unit} gives gentle breathing, 1–9 gives swimming, and 10 or more adds faster undulation and a gold wake. The window includes today. Reduced-motion preferences are respected.`;
     } else {
       feature = "growth";
       heading = `${stats.stage.name} form`;
-      amount = stats.stage.next ? `${number(stats.stage.next.remaining)} more commits to ${stats.stage.next.name}` : "Elder reached · every growth form is unlocked";
-      explanation = `${number(stats.total_commits)} unique authored commits counted. Each linked commit counts once across accessible branches and forks. Earned forms are retained even if repositories or branches later become unavailable.`;
+      amount = stats.stage.next ? `${number(stats.stage.next.remaining)} more ${unit} to ${stats.stage.next.name}` : "Elder reached · every growth form is unlocked";
+      explanation = `${number(total)} ${unit} counted. ${calendar ? "Growth follows your default GitHub contribution calendar for the past year." : "Each accessible authored commit counts once."} Earned forms carry over.`;
     }
     if (displayed === feature) return;
     displayed = feature;

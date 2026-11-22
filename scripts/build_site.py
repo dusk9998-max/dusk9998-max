@@ -10,12 +10,14 @@ from pathlib import Path
 
 def build(source: Path, destination: Path):
     stats = json.loads((source / "stats.json").read_text())
-    if stats.get("version") != 1:
+    if stats.get("version") not in (1, 2):
         raise ValueError("Unsupported public stats schema.")
-    stage, total = stats["stage"], stats["total_commits"]
+    calendar = stats["version"] == 2
+    unit = "contributions" if calendar else "commits"
+    stage, total = stats["stage"], stats["total_contributions" if calendar else "total_commits"]
     next_stage = stage["next"]
     if next_stage:
-        remaining = f'{next_stage["remaining"]:,} more commits to {next_stage["name"]}'
+        remaining = f'{next_stage["remaining"]:,} more {unit} to {next_stage["name"]}'
         progress = f'<progress value="{next_stage["progress"]}" max="1" aria-label="Progress from {escape(stage["name"])} to {escape(next_stage["name"])}">{next_stage["progress"]:.0%}</progress>'
     else:
         remaining, progress = "Elder reached. Every growth form is unlocked.", ""
@@ -23,11 +25,13 @@ def build(source: Path, destination: Path):
     svg = (source / "dragon.svg").read_text().replace('role="img"', 'role="group"')
     updated = datetime.fromisoformat(stats["updated_at"])
     replacements = {
+        "UNIT": unit,
+        "TOTAL_LABEL": "GitHub contributions in the past year" if calendar else "unique authored commits",
         "DRAGON": svg, "STATS": json.dumps(stats).replace("<", "\\u003c"),
         "UPDATED": escape(stats["updated_at"], quote=True),
         "UPDATED_LABEL": updated.strftime("%b %d, %Y · %H:%M UTC"),
         "STAGE_NUMBER": f'{stage["index"] + 1:02}', "STAGE": escape(stage["name"]),
-        "TOTAL": f'{total:,}', "RECENT": f'{stats["recent_commits"]:,}',
+        "TOTAL": f'{total:,}', "RECENT": f'{stats["recent_contributions" if calendar else "recent_commits"]:,}',
         "CURRENT": str(stats["current_weeks"]), "CURRENT_UNIT": "week" if stats["current_weeks"] == 1 else "weeks",
         "RECORD_UNIT": "week" if stats["record_weeks"] == 1 else "weeks", "RECORD": str(stats["record_weeks"]),
         "NEXT_LABEL": f'Next form · {escape(next_stage["name"])}' if next_stage else "Final form",

@@ -41,7 +41,7 @@ test('owner flow watches public deployment without dispatch credentials or dupli
 });
 test('new deployment reloads the whole portrait with a cache-busting timestamp', async () => {
   const h = harness(); await h.start();
-  h.replies.push({version: 1, updated_at: '2026-11-22T12:01:00Z'});
+  h.replies.push({version: 2, updated_at: '2026-11-22T12:01:00Z'});
   await h.tick();
   assert.equal(h.navigations.length, 1);
   const destination = new URL(h.navigations[0]);

@@ -81,6 +81,20 @@ def collect(login: str, token: str, today: date, include_today: bool = False) ->
     return days
 
 
+def collect_profile_calendar(login, token, today):
+    # Let GitHub choose its default contribution-graph window.
+    query = QUERY.replace(
+        "query($from: DateTime!, $to: DateTime!)", "query"
+    ).replace("contributionsCollection(from:$from, to:$to)", "contributionsCollection")
+    payload = api(query, {}, token)
+    calendar = payload["data"]["viewer"]["contributionsCollection"]["contributionCalendar"]
+    dates = [date.fromisoformat(day["date"])
+             for week in calendar["weeks"] for day in week["contributionDays"]]
+    if not dates or max(dates) != today or (today - min(dates)).days not in (364, 365, 366):
+        raise ValueError("Unexpected GitHub profile calendar window.")
+    return calendar_days(payload, login, min(dates), today)
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--login", required=True)
@@ -96,7 +110,7 @@ def main():
         if not credentials:
             raise ValueError("Repository credentials missing.")
         snapshot = collect_repositories(args.login, credentials, now)
-        days = collect(args.login, os.environ.get("DRAGON_ACTIVITY_TOKEN", ""), today, include_today=True)
+        days = collect_profile_calendar(args.login, os.environ.get("DRAGON_ACTIVITY_TOKEN", ""), today)
         state_path = args.output_dir / "state.json"
         previous = json.loads(state_path.read_text()) if state_path.exists() else {}
         model = develop(snapshot, days, previous, today)

@@ -15,7 +15,7 @@ class PublicStatsTests(unittest.TestCase):
         return develop({"total": total, "recent": 3, "daily": {},
                         "private_repository": "must-not-publish",
                         "palette": [{"name": "Python", "color": "#3572A5", "weight": 1}]},
-                       {}, previous or {}, date(2026, 11, 16))
+                       {date(2026, 11, 16): total}, previous or {}, date(2026, 11, 16))
 
     def stats(self, model):
         return public_stats(model, datetime(2026, 11, 16, tzinfo=timezone.utc))
@@ -56,7 +56,7 @@ class PublicStatsTests(unittest.TestCase):
             (source / "dragon.svg").write_text(render_living(model))
             build(source, output)
             html = (output / "index.html").read_text()
-            self.assertTrue("320 more commits to Mature" in html)
+            self.assertTrue("320 more contributions to Mature" in html)
             self.assertTrue("<noscript>" in html)
             self.assertTrue('</script><script>alert' not in html)
             self.assertTrue('\\u003c/script>' in html)

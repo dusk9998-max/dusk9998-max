@@ -28,7 +28,7 @@
       if (!response.ok) throw new Error("Stats unavailable");
       const latest = await response.json();
       const timestamp = Date.parse(latest.updated_at);
-      if (latest.version !== 1 || !Number.isFinite(timestamp)) throw new Error("Invalid stats");
+      if (![1, 2].includes(latest.version) || !Number.isFinite(timestamp)) throw new Error("Invalid stats");
       if (!timer) return;
       if (timestamp > baseline) {
         const page = new URL(location.href);
