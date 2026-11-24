@@ -12,7 +12,7 @@
  .creature {transform-origin:400px 320px;animation:swim 4.5s ease-in-out infinite}
  .wake {animation:wake 4.5s linear infinite}
  .metallic {animation:glimmer 7s ease-in-out infinite}
- .arrival {transform-origin:400px 320px;}
+ .arrival {transform-origin:400px 320px;animation: unfold 2s ease-out 1;}
 }
 </style>
 <defs>
@@ -26,22 +26,22 @@
 <feColorMatrix in="hue" type="saturate" values="0.692" result="paint"/>
 <feColorMatrix in="SourceGraphic" type="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  4 -8 4 0 -.08" result="red"/>
 <feComposite in="paint" in2="red" operator="in"/>
-</filter><clipPath id="panel-0"><rect x="0" y="0.000" width="800" height="385.204"/></clipPath><filter id="language-1" color-interpolation-filters="sRGB">
+</filter><clipPath id="panel-0"><rect x="0" y="0.000" width="800" height="379.398"/></clipPath><filter id="language-1" color-interpolation-filters="sRGB">
 <feColorMatrix in="SourceGraphic" type="hueRotate" values="197.321" result="hue"/>
 <feColorMatrix in="hue" type="saturate" values="0.692" result="paint"/>
 <feColorMatrix in="SourceGraphic" type="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  4 -8 4 0 -.08" result="red"/>
 <feComposite in="paint" in2="red" operator="in"/>
-</filter><clipPath id="panel-1"><rect x="0" y="384.704" width="800" height="144.022"/></clipPath><filter id="language-2" color-interpolation-filters="sRGB">
+</filter><clipPath id="panel-1"><rect x="0" y="378.898" width="800" height="139.561"/></clipPath><filter id="language-2" color-interpolation-filters="sRGB">
 <feColorMatrix in="SourceGraphic" type="hueRotate" values="201.409" result="hue"/>
 <feColorMatrix in="hue" type="saturate" values="0.692" result="paint"/>
 <feColorMatrix in="SourceGraphic" type="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  4 -8 4 0 -.08" result="red"/>
 <feComposite in="paint" in2="red" operator="in"/>
-</filter><clipPath id="panel-2"><rect x="0" y="528.226" width="800" height="61.955"/></clipPath><filter id="language-3" color-interpolation-filters="sRGB">
+</filter><clipPath id="panel-2"><rect x="0" y="517.959" width="800" height="73.786"/></clipPath><filter id="language-3" color-interpolation-filters="sRGB">
 <feColorMatrix in="SourceGraphic" type="hueRotate" values="12.000" result="hue"/>
 <feColorMatrix in="hue" type="saturate" values="0.692" result="paint"/>
 <feColorMatrix in="SourceGraphic" type="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  4 -8 4 0 -.08" result="red"/>
 <feComposite in="paint" in2="red" operator="in"/>
-</filter><clipPath id="panel-3"><rect x="0" y="589.681" width="800" height="50.819"/></clipPath><filter id="streak-accent" color-interpolation-filters="sRGB">
+</filter><clipPath id="panel-3"><rect x="0" y="591.245" width="800" height="49.255"/></clipPath><filter id="streak-accent" color-interpolation-filters="sRGB">
 <feColorMatrix in="SourceGraphic" type="hueRotate" values="38.000" result="hue"/>
 <feColorMatrix in="hue" type="saturate" values="1.100" result="paint"/>
 <feColorMatrix in="SourceGraphic" type="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  4 -8 4 0 -.08" result="red"/>
@@ -54,5 +54,5 @@
 <g class="body"><use href="#dragon-art"/><use data-language-index="0" aria-label="JavaScript" href="#dragon-art" filter="url(#language-0)" clip-path="url(#panel-0)"/><use data-language-index="1" aria-label="Python" href="#dragon-art" filter="url(#language-1)" clip-path="url(#panel-1)"/><use data-language-index="2" aria-label="TypeScript" href="#dragon-art" filter="url(#language-2)" clip-path="url(#panel-2)"/><use data-language-index="3" aria-label="Rust" href="#dragon-art" filter="url(#language-3)" clip-path="url(#panel-3)"/><use href="#dragon-art" filter="url(#streak-accent)" clip-path="url(#fins)" opacity="0.1538"/></g>
 <use class="metallic" href="#dragon-art" opacity="0"/>
 </g></g>
-<circle cx="650" cy="609" r="4" fill="#c49a51"/><circle cx="673" cy="609" r="4" fill="#c49a51"/>
+<circle cx="650" cy="609" r="4" fill="#c49a51"/><circle cx="673" cy="609" r="4" fill="#c49a51"/><circle cx="696" cy="609" r="4" fill="#c49a51"/>
 </svg>
