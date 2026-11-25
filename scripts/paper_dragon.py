@@ -2,8 +2,10 @@
 import argparse
 import json
 import os
+import re
 from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
+from urllib.error import HTTPError
 from urllib.request import Request, urlopen
 
 QUERY = """query($from: DateTime!, $to: DateTime!) {
@@ -102,6 +104,7 @@ def main():
     args = parser.parse_args()
     now = datetime.now(timezone.utc)
     today = now.date()
+    phase = "setup"
     try:
         from living_activity import collect_repositories
         from living_model import develop, public_stats
@@ -109,8 +112,11 @@ def main():
         credentials = os.environ.get("DRAGON_REPO_TOKENS", "")
         if not credentials:
             raise ValueError("Repository credentials missing.")
+        phase = "repository language collection"
         snapshot = collect_repositories(args.login, credentials, now)
+        phase = "GitHub contribution calendar"
         days = collect_profile_calendar(args.login, os.environ.get("DRAGON_ACTIVITY_TOKEN", ""), today)
+        phase = "rendering and output validation"
         state_path = args.output_dir / "state.json"
         previous = json.loads(state_path.read_text()) if state_path.exists() else {}
         model = develop(snapshot, days, previous, today)
@@ -126,9 +132,14 @@ def main():
             temporary = args.output_dir / (name + ".tmp")
             temporary.write_text(content)
             temporary.replace(args.output_dir / name)
-    except Exception:
+    except Exception as error:
         # Never echo API response bodies, headers, credentials, or private data.
-        parser.exit(1, "Paper Dragon failed: verify DRAGON_REPO_TOKENS read-only private access, owner activity token, API limits and complete calendar. Previous artwork retained.\n")
+        detail = f"HTTP {error.code}" if isinstance(error, HTTPError) else type(error).__name__
+        if str(error) == "Unexpected GitHub profile calendar window.":
+            detail = "unexpected calendar date range"
+        if re.fullmatch(r"GitHub repository API returned HTTP [1-5][0-9]{2}\.", str(error)):
+            detail = str(error)
+        parser.exit(1, f"Collector failed during {phase} ({detail}).\nPaper Dragon failed: verify DRAGON_REPO_TOKENS read-only private access, owner activity token, API limits and complete calendar. Previous artwork retained.\n")
 
 
 if __name__ == "__main__":
