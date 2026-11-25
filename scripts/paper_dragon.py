@@ -92,9 +92,17 @@ def collect_profile_calendar(login, token, today):
     calendar = payload["data"]["viewer"]["contributionsCollection"]["contributionCalendar"]
     dates = [date.fromisoformat(day["date"])
              for week in calendar["weeks"] for day in week["contributionDays"]]
-    if not dates or max(dates) != today or (today - min(dates)).days not in (364, 365, 366):
-        raise ValueError("Unexpected GitHub profile calendar window.")
-    return calendar_days(payload, login, min(dates), today)
+    if dates and max(dates) == today and (today - min(dates)).days in (364, 365, 366):
+        return calendar_days(payload, login, min(dates), today)
+
+    # Explicit UTC dates avoid depending on the API's implicit end date.
+    first = today - timedelta(days=365)
+    days = {}
+    for start, end in windows(first, today):
+        payload = api(QUERY, {"from": start.isoformat() + "T00:00:00Z",
+                              "to": end.isoformat() + "T23:59:59Z"}, token)
+        days.update(calendar_days(payload, login, start, end))
+    return days
 
 
 def main():
@@ -135,8 +143,6 @@ def main():
     except Exception as error:
         # Never echo API response bodies, headers, credentials, or private data.
         detail = f"HTTP {error.code}" if isinstance(error, HTTPError) else type(error).__name__
-        if str(error) == "Unexpected GitHub profile calendar window.":
-            detail = "unexpected calendar date range"
         if re.fullmatch(r"GitHub repository API returned HTTP [1-5][0-9]{2}\.", str(error)):
             detail = str(error)
         parser.exit(1, f"Collector failed during {phase} ({detail}).\nPaper Dragon failed: verify DRAGON_REPO_TOKENS read-only private access, owner activity token, API limits and complete calendar. Previous artwork retained.\n")
