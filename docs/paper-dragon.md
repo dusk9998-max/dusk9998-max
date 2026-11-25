@@ -25,6 +25,6 @@ DRAGON_REPO_TOKENS through a local secret manager and run:
 python3 scripts/paper_dragon.py --login dusk9998-max --output-dir dragon
 ```
 
-Nightly updates run at 00:20 UTC. A failed collection preserves the last successful
+Updates are scheduled at 20 minutes past every hour (UTC). A failed collection preserves the last successful
 artwork. Main runs deploy the interactive site after publication; branch runs
 produce a preview artifact. All workflow actions are pinned to commit SHAs.

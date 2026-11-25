@@ -48,7 +48,7 @@ breathing; 1–9 gives swimming and body undulation; 10+ adds faster motion and 
 gold wake. A newly earned stage or seal triggers a brief entrance flourish.
 Reduced-motion preference disables movement, and still.svg is always available.
 
-Nightly collection runs at 00:20 UTC and also supports workflow_dispatch.
+Collection is scheduled at 20 minutes past every hour (UTC) and also supports workflow_dispatch.
 No generated preview statistics are used for profile output.
 
 ## Interactive portrait
@@ -58,7 +58,7 @@ https://dusk9998-max.github.io/dusk9998-max/. README images cannot run interacti
 JavaScript. The profile image has no language legend; color inspection is on the
 portrait page, with equivalent keyboard buttons and touch selection.
 
-The nightly collector also publishes dragon/stats.json: aggregate calendar contributions,
+The hourly collector also publishes dragon/stats.json: aggregate calendar contributions,
 seven-day contributions, current/record weekly streaks, stage, gold, language proportions,
 next-stage remaining contributions and an update timestamp. No private repository names,
 branch identities, messages or SHAs are included. Stage thresholds are shared
