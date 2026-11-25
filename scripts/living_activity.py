@@ -64,7 +64,9 @@ class GitHubRead:
         try:
             with urlopen(request, timeout=45) as response:
                 result = json.load(response)
-        except (HTTPError, OSError, ValueError):
+        except HTTPError as error:
+            raise AccessError(f"GitHub repository API returned HTTP {error.code}.") from None
+        except (OSError, ValueError):
             # Do not echo response bodies, request URLs or authorization headers.
             raise AccessError("Repository metadata could not be read; verify access and API limits.") from None
         if isinstance(result, dict) and result.get("errors"):
