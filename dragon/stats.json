@@ -1,21 +1,21 @@
 {
   "version": 2,
-  "updated_at": "2026-11-25T18:39:52.326683+00:00",
-  "total_contributions": 351,
-  "recent_contributions": 102,
+  "updated_at": "2026-11-26T02:14:48.681036+00:00",
+  "total_contributions": 364,
+  "recent_contributions": 112,
   "stage": {
     "index": 2,
     "name": "Growing",
     "next": {
       "name": "Mature",
       "threshold": 500,
-      "remaining": 149,
-      "progress": 0.5742857142857143
+      "remaining": 136,
+      "progress": 0.6114285714285714
     }
   },
   "gold": {
     "count": 3,
-    "remaining": 399
+    "remaining": 386
   },
   "current_weeks": 2,
   "record_weeks": 4,
@@ -25,22 +25,22 @@
     {
       "name": "JavaScript",
       "color": "#f1e05a",
-      "share": 0.5253942306612347
+      "share": 0.5039984699414155
     },
     {
       "name": "TypeScript",
       "color": "#3178c6",
-      "share": 0.20528537036382727
+      "share": 0.23773501740204991
     },
     {
       "name": "Python",
       "color": "#3572A5",
-      "share": 0.20326112882907402
+      "share": 0.19496058070280167
     },
     {
       "name": "Rust",
       "color": "#dea584",
-      "share": 0.06605927014586407
+      "share": 0.06330593195373303
     }
   ]
 }
