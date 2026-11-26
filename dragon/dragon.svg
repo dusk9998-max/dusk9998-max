@@ -26,22 +26,22 @@
 <feColorMatrix in="hue" type="saturate" values="0.692" result="paint"/>
 <feColorMatrix in="SourceGraphic" type="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  4 -8 4 0 -.08" result="red"/>
 <feComposite in="paint" in2="red" operator="in"/>
-</filter><clipPath id="panel-0"><rect x="0" y="0.000" width="800" height="311.215"/></clipPath><filter id="language-1" color-interpolation-filters="sRGB">
+</filter><clipPath id="panel-0"><rect x="0" y="0.000" width="800" height="307.274"/></clipPath><filter id="language-1" color-interpolation-filters="sRGB">
 <feColorMatrix in="SourceGraphic" type="hueRotate" values="201.409" result="hue"/>
 <feColorMatrix in="hue" type="saturate" values="0.692" result="paint"/>
 <feColorMatrix in="SourceGraphic" type="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  4 -8 4 0 -.08" result="red"/>
 <feComposite in="paint" in2="red" operator="in"/>
-</filter><clipPath id="panel-1"><rect x="0" y="310.715" width="800" height="151.738"/></clipPath><filter id="language-2" color-interpolation-filters="sRGB">
+</filter><clipPath id="panel-1"><rect x="0" y="306.774" width="800" height="155.221"/></clipPath><filter id="language-2" color-interpolation-filters="sRGB">
 <feColorMatrix in="SourceGraphic" type="hueRotate" values="197.321" result="hue"/>
 <feColorMatrix in="hue" type="saturate" values="0.692" result="paint"/>
 <feColorMatrix in="SourceGraphic" type="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  4 -8 4 0 -.08" result="red"/>
 <feComposite in="paint" in2="red" operator="in"/>
-</filter><clipPath id="panel-2"><rect x="0" y="461.953" width="800" height="139.487"/></clipPath><filter id="language-3" color-interpolation-filters="sRGB">
+</filter><clipPath id="panel-2"><rect x="0" y="461.495" width="800" height="138.728"/></clipPath><filter id="language-3" color-interpolation-filters="sRGB">
 <feColorMatrix in="SourceGraphic" type="hueRotate" values="12.000" result="hue"/>
 <feColorMatrix in="hue" type="saturate" values="0.692" result="paint"/>
 <feColorMatrix in="SourceGraphic" type="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  4 -8 4 0 -.08" result="red"/>
 <feComposite in="paint" in2="red" operator="in"/>
-</filter><clipPath id="panel-3"><rect x="0" y="600.940" width="800" height="39.560"/></clipPath><filter id="streak-accent" color-interpolation-filters="sRGB">
+</filter><clipPath id="panel-3"><rect x="0" y="599.722" width="800" height="40.778"/></clipPath><filter id="streak-accent" color-interpolation-filters="sRGB">
 <feColorMatrix in="SourceGraphic" type="hueRotate" values="38.000" result="hue"/>
 <feColorMatrix in="hue" type="saturate" values="1.100" result="paint"/>
 <feColorMatrix in="SourceGraphic" type="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  4 -8 4 0 -.08" result="red"/>
